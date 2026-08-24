@@ -308,6 +308,11 @@ export default defineConfig(() => {
         '@': path.resolve(__dirname, '.'),
       },
     },
+    // Pure static browser build: emit plain files into dist/, usable from any subpath when hosted statically.
+    base: './',
+    build: {
+      outDir: 'dist',
+    },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modify芒聙聰file watching is disabled to prevent flickering during agent edits.
