@@ -19,7 +19,6 @@ import {
 } from '../../lib/groundEqSettings';
 import { LyricsDisplay } from './LyricsDisplay';
 import { SplashScreen } from './SplashScreen';
-import { HomeButton } from './HomeButton';
 import { LocalPlaylistPanel } from './LocalPlaylistPanel';
 import { fetchLocalSongs } from '../../lib/localSongs';
 
@@ -1623,7 +1622,6 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
     >
       <DesktopTitleDragRegion />
       <DesktopWindowControls />
-      <HomeButton />
 
       {isDragging && (
         <div 
@@ -2590,6 +2588,14 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
                 style={{ accentColor: accentHex }}
               />
             </div>
+            <button
+              onClick={() => { window.location.href = 'https://milox.dpdns.org'; }}
+              className="hover:text-white transition-colors flex items-center gap-1"
+              title="返回主页"
+            >
+              <span className="text-sm" aria-hidden="true">🏠</span>
+              <span className="text-[10px] hidden sm:inline tracking-wide">主页</span>
+            </button>
           </div>
           </div>
         </div>
