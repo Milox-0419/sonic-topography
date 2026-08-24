@@ -19,6 +19,9 @@ import {
 } from '../../lib/groundEqSettings';
 import { LyricsDisplay } from './LyricsDisplay';
 import { SplashScreen } from './SplashScreen';
+import { HomeButton } from './HomeButton';
+import { LocalPlaylistPanel } from './LocalPlaylistPanel';
+import { fetchLocalSongs } from '../../lib/localSongs';
 
 import {
   readDisplaySettingsStorage,
@@ -141,6 +144,7 @@ function songIdentity(song: Pick<NeteaseSong, 'id' | 'provider'>) {
 
 function songSourceLabel(song: NeteaseSong | null) {
   if (!song) return 'Local Audio';
+  if (song.provider === 'local') return '本地音乐';
   return song.provider === 'qq' ? 'QQ Music' : 'Netease Cloud';
 }
 
@@ -390,6 +394,20 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
       onCurrentSongChange(song);
     }
   };
+
+  // Local playlist (public/songs)
+  const [localSongs, setLocalSongs] = useState<NeteaseSong[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    fetchLocalSongs(baseUrl)
+      .then((songs) => {
+        if (!cancelled) setLocalSongs(songs);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const {
     audioInputMode,
@@ -1181,6 +1199,32 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
   const loadNeteaseSong = async (song: NeteaseSong, queue?: NeteaseSong[]) => {
     setAudioInputMode('player');
     setAudioInputStatus('');
+
+    // Local song from public/songs — play the static file directly.
+    if (song.provider === 'local') {
+      if (queue) setPlayQueue(queue);
+      setCurrentSongId(songIdentity(song));
+      setCurrentSong(song);
+      setCurrentCover(song.cover || '');
+      setTrackName(song.artist && song.artist !== '未知艺术家' ? `${song.artist} - ${song.name}` : song.name);
+      setLyricsText('');
+      setSearchStatus('');
+      setShowSearchPanel(false);
+
+      engine.init();
+      if (song.url) {
+        engine.loadUrl(song.url);
+        engine.play();
+      }
+      if (song.lrcUrl) {
+        fetch(song.lrcUrl)
+          .then((response) => (response.ok ? response.text() : ''))
+          .then((text) => setLyricsText(text))
+          .catch(() => {});
+      }
+      return;
+    }
+
     if (queue) setPlayQueue(queue);
     setCurrentSongId(songIdentity(song));
     setCurrentSong(song);
@@ -1309,6 +1353,20 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
     setCurrentSongId(songIdentity(song));
     setTrackName(last.trackName);
     setCurrentCover(last.cover || song.cover || '');
+
+    // Local songs (public/songs) are restored from their static files.
+    if (song.provider === 'local') {
+      engine.init();
+      if (song.url) engine.loadUrl(song.url);
+      if (song.lrcUrl) {
+        fetch(song.lrcUrl)
+          .then((response) => (response.ok ? response.text() : ''))
+          .then((text) => setLyricsText(text))
+          .catch(() => {});
+      }
+      return;
+    }
+
     // Pre-load the audio URL silently so the player bar shows the track
     const provider = song.provider || 'netease';
     const requestCookie = provider === 'netease' && isNeteaseCookieValid ? neteaseCookie : '';
@@ -1565,6 +1623,7 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
     >
       <DesktopTitleDragRegion />
       <DesktopWindowControls />
+      <HomeButton />
 
       {isDragging && (
         <div 
@@ -2539,15 +2598,28 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
         <ClockDisplay settings={displaySettings.clock} accentHex={accentHex} />
       </div>
 
-      {trackName !== 'No track selected' && lyricsText && (
-        <LyricsDisplay
-          lrcText={lyricsText}
-          currentTime={currentTime}
-          isPlaying={isPlaying && displaySettings.showLyrics}
-          accentHex={accentHex}
-          lyricsSettings={{ ...currentStyleConfig, style: lyricsSettings.style }}
-        />
-      )}
+      {/* Main content layout: left 3D lyrics / right playlist (bottom player bar stays independent) */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-[140px] top-[70px] z-[62] flex items-stretch justify-between gap-5 px-5">
+        <div className="relative flex min-w-0 flex-1 items-stretch">
+          {trackName !== 'No track selected' && lyricsText && (
+            <LyricsDisplay
+              lrcText={lyricsText}
+              currentTime={currentTime}
+              isPlaying={isPlaying && displaySettings.showLyrics}
+              accentHex={accentHex}
+              lyricsSettings={{ ...currentStyleConfig, style: lyricsSettings.style }}
+            />
+          )}
+        </div>
+        <div className="pointer-events-auto flex w-[320px] max-w-[32vw] shrink-0 py-1">
+          <LocalPlaylistPanel
+            songs={localSongs}
+            currentSongId={currentSongId}
+            onPlay={(song) => loadNeteaseSong(song, localSongs)}
+            accentHex={accentHex}
+          />
+        </div>
+      </div>
 
 
 

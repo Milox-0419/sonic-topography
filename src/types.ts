@@ -48,7 +48,7 @@ export interface TrackInfo {
   url?: string;
 }
 
-export type MusicProvider = 'netease' | 'qq';
+export type MusicProvider = 'netease' | 'qq' | 'local';
 
 export interface NeteaseSong {
   provider?: MusicProvider;
@@ -63,6 +63,10 @@ export interface NeteaseSong {
   album: string;
   duration: number;
   fee: number;
+  /** Local songs (public/songs) only: playable audio URL */
+  url?: string;
+  /** Local songs (public/songs) only: matching .lrc lyrics URL */
+  lrcUrl?: string;
 }
 
 export interface SavedPlaylist {
