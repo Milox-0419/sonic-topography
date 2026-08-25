@@ -1,7 +1,6 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import fs from 'fs';
 import {defineConfig} from 'vite';
 import { registerQQMusicViteMiddlewares } from './server/qq-music.mjs';
 import { streamNeteaseAudioResponse } from './server/netease-audio-proxy.mjs';
@@ -301,40 +300,9 @@ function neteaseApiPlugin() {
   };
 }
 
-const LOCAL_SONG_AUDIO_EXTS = ['.mp3', '.wav', '.flac', '.ogg', '.m4a', '.aac'];
-const LOCAL_SONGS_DIR = path.resolve(__dirname, 'public/songs');
-
-// Lists audio files (and matching .lrc lyrics) inside public/songs for the local playlist.
-function localSongsApiPlugin() {
-  return {
-    name: 'local-songs-api',
-    configureServer(server: any) {
-      server.middlewares.use('/api/local-songs', async (_req: any, res: any) => {
-        try {
-          const entries = fs.existsSync(LOCAL_SONGS_DIR) ? fs.readdirSync(LOCAL_SONGS_DIR) : [];
-          const lrcFiles = new Set(
-            entries.filter((name) => name.toLowerCase().endsWith('.lrc')).map((name) => name.slice(0, -4).toLowerCase()),
-          );
-          const songs = entries
-            .filter((name) => LOCAL_SONG_AUDIO_EXTS.includes(path.extname(name).toLowerCase()))
-            .map((file) => ({
-              file,
-              lrc: lrcFiles.has(file.slice(0, file.length - path.extname(file).length).toLowerCase())
-                ? file.replace(/\.[^.]+$/, '.lrc')
-                : undefined,
-            }));
-          writeJson(res, 200, { songs });
-        } catch (error) {
-          writeJson(res, 500, { error: 'Unable to list local songs', songs: [] });
-        }
-      });
-    },
-  };
-}
-
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss(), neteaseApiPlugin(), localSongsApiPlugin()],
+    plugins: [react(), tailwindcss(), neteaseApiPlugin()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
