@@ -139,7 +139,7 @@ export const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ lrcText, currentTi
   return (
     <div 
         ref={containerRef}
-        className={`absolute left-[80px] right-[620px] top-[40vh] -translate-y-1/2 h-[60vh] max-w-[900px] overflow-hidden pointer-events-none select-none z-40 transition-all duration-1000 ease-out ${isPlaying ? 'opacity-100 translate-x-0 blur-none' : 'opacity-0 -translate-x-[20px] blur-sm'}`}
+        className={`absolute left-[80px] right-[440px] top-[40vh] -translate-y-1/2 h-[60vh] max-w-[900px] overflow-hidden pointer-events-none select-none z-40 transition-all duration-1000 ease-out ${isPlaying ? 'opacity-100 translate-x-0 blur-none' : 'opacity-0 -translate-x-[20px] blur-sm'}`}
         style={{ 
             maskImage: 'linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)',
             WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)',

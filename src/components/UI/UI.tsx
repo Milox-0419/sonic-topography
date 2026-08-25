@@ -1669,295 +1669,76 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
         </div>
       )}
 
-      {/* Sidebar Right (always visible music list) */}
-      <div className="side-nav-trigger-right absolute right-0 top-0 h-full z-[60] pointer-events-none">
-        <aside
-          className="side-nav-panel-right absolute right-0 top-0 h-full flex pointer-events-auto z-[61] translate-x-0"
-        style={{
-          ...themedPanelStyle(accentHex, isLightSurface ? 0.82 : 0.7),
-          borderLeft: `1px solid ${colorWithAlpha(accentHex, isLightSurface ? 0.26 : 0.18)}`,
-          boxShadow: `-16px 0 50px rgba(0,0,0,${isLightSurface ? 0.18 : 0.2})`,
-        }}
-      >
-        <div className="flex h-full w-[540px]">
-           {/* Playlists Column */}
-           <div className="w-[200px] border-r flex flex-col h-full" style={{ borderColor: colorWithAlpha(accentHex, 0.18) }}>
-             <div className="p-5 text-[10px] uppercase tracking-[0.2em] text-white/50 shrink-0">Playlists</div>
-             <div className="flex-1 overflow-y-auto themed-scrollbar pb-5">
-               {/* 立体歌单：public/songs 静态文件（仿照示例歌曲 demo.mp3 + demo.lrc 的加载方式） */}
-               <div className="mb-4">
-                 <div className="px-5 py-2 text-[10px] uppercase tracking-[0.2em] text-white/50 sticky top-0 z-10 backdrop-blur-md" style={{ backgroundColor: colorWithAlpha(surfaceHex, 0.8) }}>Songs</div>
-                 <button
-                   onClick={() => setActiveRightSidebarSelection({ type: 'local_songs' })}
-                   className={`w-full flex items-center gap-3 px-5 py-3 hover:bg-white/5 transition-colors text-left ${activeRightSidebarSelection.type === 'local_songs' ? 'bg-white/5' : ''}`}
-                 >
-                   <div className="w-8 h-8 rounded shrink-0 bg-white/10 flex items-center justify-center overflow-hidden">
-                     {localSongs[0]?.cover ? (
-                        <img src={localSongs[0].cover} className="w-full h-full object-cover" />
-                     ) : (
-                        <ListMusic size={14} className="text-white/40" />
-                     )}
-                   </div>
-                   <div className="min-w-0 flex-1">
-                     <div className={`text-[12px] truncate ${activeRightSidebarSelection.type === 'local_songs' ? 'text-white' : 'text-white/70'}`}>立体歌单</div>
-                     <div className="text-[10px] text-white/40 mt-0.5">{localSongs.length}</div>
-                   </div>
-                 </button>
-                 {localSongs.length === 0 && (
-                   <div className="px-5 pb-2 text-[11px] leading-5 text-white/35">暂无歌曲：将音频与同名 .lrc 放入 public/songs/ 并更新 manifest.json</div>
-                 )}
-               </div>
+      {/* Sidebar Right: cover-art playlist strip (always visible) */}
+      <div className="absolute right-0 top-0 z-[60] flex h-full w-[380px] flex-col pointer-events-auto">
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ background: 'linear-gradient(to left, rgba(3, 6, 12, 0.78) 55%, rgba(3, 6, 12, 0.35) 78%, transparent)' }}
+        />
+        <div
+          className="pointer-events-none absolute right-0 top-0 h-full w-px"
+          style={{ background: `linear-gradient(to bottom, transparent, ${colorWithAlpha(accentHex, 0.5)} 28%, ${colorWithAlpha(accentHex, 0.5)} 72%, transparent)` }}
+        />
 
-                {/* Local Playlists */}
-                {playlists.length > 0 && (
-                 <div className="mb-4">
-                   <div className="px-5 py-2 text-[10px] uppercase tracking-[0.2em] text-white/50 sticky top-0 z-10 backdrop-blur-md" style={{ backgroundColor: colorWithAlpha(surfaceHex, 0.8) }}>Local</div>
-                   {playlists.map(playlist => (
-                     <button 
-                       key={playlist.id} 
-                       onClick={() => {
-                         setActivePlaylistId(playlist.id);
-                         setActiveRightSidebarSelection({ type: 'local', id: playlist.id });
-                       }}
-                       className={`w-full flex items-center gap-3 px-5 py-3 hover:bg-white/5 transition-colors text-left ${activeRightSidebarSelection.type === 'local' && activeRightSidebarSelection.id === playlist.id ? 'bg-white/5' : ''}`}
-                     >
-                       <div className="w-8 h-8 rounded shrink-0 bg-white/10 flex items-center justify-center overflow-hidden">
-                         {playlist.songs[0]?.cover ? (
-                            <img src={playlist.songs[0].cover} className="w-full h-full object-cover" />
-                         ) : (
-                            <ListMusic size={14} className="text-white/40" />
-                         )}
-                       </div>
-                       <div className="min-w-0 flex-1">
-                         <div className={`text-[12px] truncate ${activeRightSidebarSelection.type === 'local' && activeRightSidebarSelection.id === playlist.id ? 'text-white' : 'text-white/70'}`}>{playlist.name}</div>
-                         <div className="text-[10px] text-white/40 mt-0.5">{playlist.songs.length}</div>
-                       </div>
-                     </button>
-                   ))}
-                 </div>
-               )}
-
-               {/* NetEase Playlists */}
-               {isNeteaseCookieValid && (
-                 <div className="mb-4">
-                   <div className="px-5 py-2 text-[10px] uppercase tracking-[0.2em] text-white/50 sticky top-0 z-10 backdrop-blur-md" style={{ backgroundColor: colorWithAlpha(surfaceHex, 0.8) }}>NetEase Cloud</div>
-                   <button 
-                     onClick={() => {
-                       setActiveRightSidebarSelection({ type: 'netease_daily' });
-                       loadDailyRecommendations();
-                     }}
-                     className={`w-full flex items-center gap-3 px-5 py-3 hover:bg-white/5 transition-colors text-left ${activeRightSidebarSelection.type === 'netease_daily' ? 'bg-white/5' : ''}`}
-                   >
-                     <div className="w-8 h-8 rounded shrink-0 bg-white/10 flex items-center justify-center overflow-hidden text-white/40"><ListMusic size={14} /></div>
-                     <div className="min-w-0 flex-1"><div className={`text-[12px] truncate ${activeRightSidebarSelection.type === 'netease_daily' ? 'text-white' : 'text-white/70'}`}>{t('ui.text.74', lang)}</div></div>
-                   </button>
-                   <button 
-                     onClick={() => {
-                       setActiveRightSidebarSelection({ type: 'netease_liked' });
-                       loadLikedSongs('netease');
-                     }}
-                     className={`w-full flex items-center gap-3 px-5 py-3 hover:bg-white/5 transition-colors text-left ${activeRightSidebarSelection.type === 'netease_liked' ? 'bg-white/5' : ''}`}
-                   >
-                     <div className="w-8 h-8 rounded shrink-0 bg-white/10 flex items-center justify-center overflow-hidden text-white/40"><ListMusic size={14} /></div>
-                     <div className="min-w-0 flex-1"><div className={`text-[12px] truncate ${activeRightSidebarSelection.type === 'netease_liked' ? 'text-white' : 'text-white/70'}`}>{t('ui.text.75', lang)}</div></div>
-                   </button>
-                    {(() => {
-                      const sorted = [...fetchedNeteasePlaylists].sort((a, b) => {
-                        const aPinned = pinnedNeteasePlaylists.includes(String(a.id));
-                        const bPinned = pinnedNeteasePlaylists.includes(String(b.id));
-                        if (aPinned && !bPinned) return -1;
-                        if (!aPinned && bPinned) return 1;
-                        return 0;
-                      });
-                      const displayCount = Math.max(5, pinnedNeteasePlaylists.length);
-                      const visiblePlaylists = showAllNetease ? sorted : sorted.slice(0, displayCount);
-                      const hasMore = sorted.length > displayCount;
-
-                      return (
-                        <>
-                          {visiblePlaylists.map(playlist => {
-                            const isPinned = pinnedNeteasePlaylists.includes(String(playlist.id));
-                            return (
-                              <button 
-                                key={playlist.id} 
-                                onClick={() => {
-                                  setActiveRightSidebarSelection({ type: 'netease_playlist', id: playlist.id });
-                                  loadNeteasePlaylistSongs(playlist);
-                                }}
-                                className={`w-full flex items-center gap-3 px-5 py-3 hover:bg-white/5 transition-colors text-left group ${activeRightSidebarSelection.type === 'netease_playlist' && activeRightSidebarSelection.id === playlist.id ? 'bg-white/5' : ''}`}
-                              >
-                                <div className="w-8 h-8 rounded shrink-0 bg-white/10 flex items-center justify-center overflow-hidden">
-                                  {playlist.cover ? <img src={playlist.cover} className="w-full h-full object-cover" /> : <ListMusic size={14} className="text-white/40" />}
-                                </div>
-                                <div className="min-w-0 flex-1"><div className={`text-[12px] truncate ${activeRightSidebarSelection.type === 'netease_playlist' && activeRightSidebarSelection.id === playlist.id ? 'text-white' : 'text-white/70'}`}>{playlist.name}</div></div>
-                                <div 
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (isPinned) {
-                                      setPinnedNeteasePlaylists(prev => prev.filter(id => id !== String(playlist.id)));
-                                    } else {
-                                      setPinnedNeteasePlaylists(prev => [...prev, String(playlist.id)]);
-                                    }
-                                  }}
-                                  className={`shrink-0 p-1 rounded hover:bg-white/10 transition-colors ${isPinned ? 'opacity-100 text-cyan-400' : 'opacity-0 group-hover:opacity-100 text-white/40 hover:text-white'}`}
-                                  title={isPinned ? t('ui.text.76', lang) : t('ui.text.77', lang)}
-                                >
-                                  <Pin size={14} className={isPinned ? "fill-cyan-400/20" : ""} />
-                                </div>
-                              </button>
-                            );
-                          })}
-                          {hasMore && (
-                            <button
-                              onClick={() => setShowAllNetease(!showAllNetease)}
-                              className="w-full flex items-center justify-center gap-2 px-5 py-3 text-[10px] uppercase tracking-[0.1em] text-white/40 hover:text-white hover:bg-white/5 transition-colors"
-                            >
-                              {showAllNetease ? (
-                                <><ChevronUp size={14} /> {t('ui.text.78', lang)}</>
-                              ) : (
-                                <><ChevronDown size={14} /> {t('ui.text.79', lang)}{sorted.length})</>
-                              )}
-                            </button>
-                          )}
-                        </>
-                      );
-                    })()}
-                 </div>
-               )}
-
-               {/* QQ Playlists */}
-               {isQQCookieValid && (
-                 <div className="mb-4">
-                   <div className="px-5 py-2 text-[10px] uppercase tracking-[0.2em] text-white/50 sticky top-0 z-10 backdrop-blur-md" style={{ backgroundColor: colorWithAlpha(surfaceHex, 0.8) }}>QQ Music</div>
-                   <button 
-                     onClick={() => {
-                       setActiveRightSidebarSelection({ type: 'qq_liked' });
-                       loadLikedSongs('qq');
-                     }}
-                     className={`w-full flex items-center gap-3 px-5 py-3 hover:bg-white/5 transition-colors text-left ${activeRightSidebarSelection.type === 'qq_liked' ? 'bg-white/5' : ''}`}
-                   >
-                     <div className="w-8 h-8 rounded shrink-0 bg-white/10 flex items-center justify-center overflow-hidden text-white/40"><ListMusic size={14} /></div>
-                     <div className="min-w-0 flex-1"><div className={`text-[12px] truncate ${activeRightSidebarSelection.type === 'qq_liked' ? 'text-white' : 'text-white/70'}`}>{t('ui.text.80', lang)}</div></div>
-                   </button>
-                    {(() => {
-                      const sorted = [...fetchedQQPlaylists].sort((a, b) => {
-                        const aPinned = pinnedQQPlaylists.includes(String(a.id));
-                        const bPinned = pinnedQQPlaylists.includes(String(b.id));
-                        if (aPinned && !bPinned) return -1;
-                        if (!aPinned && bPinned) return 1;
-                        return 0;
-                      });
-                      const displayCount = Math.max(5, pinnedQQPlaylists.length);
-                      const visiblePlaylists = showAllQQ ? sorted : sorted.slice(0, displayCount);
-                      const hasMore = sorted.length > displayCount;
-
-                      return (
-                        <>
-                          {visiblePlaylists.map(playlist => {
-                            const isPinned = pinnedQQPlaylists.includes(String(playlist.id));
-                            return (
-                              <button 
-                                key={playlist.id} 
-                                onClick={() => {
-                                  setActiveRightSidebarSelection({ type: 'qq_playlist', id: playlist.id });
-                                  loadNeteasePlaylistSongs(playlist);
-                                }}
-                                className={`w-full flex items-center gap-3 px-5 py-3 hover:bg-white/5 transition-colors text-left group ${activeRightSidebarSelection.type === 'qq_playlist' && activeRightSidebarSelection.id === playlist.id ? 'bg-white/5' : ''}`}
-                              >
-                                <div className="w-8 h-8 rounded shrink-0 bg-white/10 flex items-center justify-center overflow-hidden">
-                                  {playlist.cover ? <img src={playlist.cover} className="w-full h-full object-cover" /> : <ListMusic size={14} className="text-white/40" />}
-                                </div>
-                                <div className="min-w-0 flex-1"><div className={`text-[12px] truncate ${activeRightSidebarSelection.type === 'qq_playlist' && activeRightSidebarSelection.id === playlist.id ? 'text-white' : 'text-white/70'}`}>{playlist.name}</div></div>
-                                <div 
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (isPinned) {
-                                      setPinnedQQPlaylists(prev => prev.filter(id => id !== String(playlist.id)));
-                                    } else {
-                                      setPinnedQQPlaylists(prev => [...prev, String(playlist.id)]);
-                                    }
-                                  }}
-                                  className={`shrink-0 p-1 rounded hover:bg-white/10 transition-colors ${isPinned ? 'opacity-100 text-cyan-400' : 'opacity-0 group-hover:opacity-100 text-white/40 hover:text-white'}`}
-                                  title={isPinned ? t('ui.text.81', lang) : t('ui.text.82', lang)}
-                                >
-                                  <Pin size={14} className={isPinned ? "fill-cyan-400/20" : ""} />
-                                </div>
-                              </button>
-                            );
-                          })}
-                          {hasMore && (
-                            <button
-                              onClick={() => setShowAllQQ(!showAllQQ)}
-                              className="w-full flex items-center justify-center gap-2 px-5 py-3 text-[10px] uppercase tracking-[0.1em] text-white/40 hover:text-white hover:bg-white/5 transition-colors"
-                            >
-                              {showAllQQ ? (
-                                <><ChevronUp size={14} /> {t('ui.text.83', lang)}</>
-                              ) : (
-                                <><ChevronDown size={14} /> {t('ui.text.84', lang)}{sorted.length})</>
-                              )}
-                            </button>
-                          )}
-                        </>
-                      );
-                    })()}
-                 </div>
-               )}
-             </div>
-           </div>
-           
-           {/* Tracks Column */}
-           <div className="flex-1 flex flex-col h-full">
-             <div className="flex items-center justify-between p-5 shrink-0">
-                <div className="text-[10px] uppercase tracking-[0.2em] text-white/50">Tracks</div>
-                 <div className="text-[10px] uppercase tracking-[0.2em] text-white/30">
-                   {(activeRightSidebarSelection.type === 'local_songs'
-                     ? localSongs.length
-                     : activeRightSidebarSelection.type === 'local'
-                       ? (activePlaylist?.songs.length || 0)
-                       : (neteaseCloudSongs.length || 0))} Tracks
-                 </div>
-              </div>
-              <div className="flex-1 overflow-y-auto themed-scrollbar pb-5">
-                {(() => {
-                  const currentTracks = activeRightSidebarSelection.type === 'local_songs'
-                    ? localSongs
-                    : activeRightSidebarSelection.type === 'local'
-                      ? (activePlaylist?.songs || [])
-                      : neteaseCloudSongs;
-                 if (currentTracks.length === 0) return <div className="px-5 py-8 text-[12px] text-white/40">No songs in this playlist</div>;
-                 return currentTracks.map((song, index) => (
-                   <button
-                     key={songIdentity(song)}
-                     onClick={() => loadNeteaseSong(song, currentTracks)}
-                     className={`w-full flex items-center gap-3 px-5 py-3 hover:bg-white/5 transition-colors text-left group ${currentSongId === songIdentity(song) ? 'bg-white/5' : ''}`}
-                   >
-                     <div className="w-4 text-center text-[10px] text-white/30 group-hover:hidden shrink-0">
-                       {(index + 1).toString().padStart(2, '0')}
-                     </div>
-                     <div className="w-4 text-center hidden group-hover:flex items-center justify-center text-white shrink-0">
-                       <Play size={10} />
-                     </div>
-                     <div className="w-8 h-8 rounded shrink-0 bg-white/10 overflow-hidden flex items-center justify-center">
-                        {song.cover ? (
-                           <img src={song.cover} className="w-full h-full object-cover" />
-                        ) : (
-                           <ListMusic size={14} className="text-white/40" />
-                        )}
-                     </div>
-                     <div className="min-w-0 flex-1">
-                       <div className={`text-[12px] truncate ${currentSongId === songIdentity(song) ? 'text-white' : 'text-white/80'}`}>{song.name}</div>
-                       <div className="text-[10px] text-white/40 mt-0.5 truncate">{song.artist || 'Unknown'}</div>
-                     </div>
-                     <div className="text-[10px] text-white/30 shrink-0">
-                       {formatTime(song.duration ? song.duration / 1000 : 0)}
-                     </div>
-                   </button>
-                 ));
-               })()}
-             </div>
-           </div>
+        <div className="relative shrink-0 pt-6 pr-6 text-right">
+          <div className="flex items-center justify-end gap-2">
+            <span className="text-[11px] uppercase tracking-[0.35em] text-white/45">Playlist</span>
+            <span
+              className="min-w-[26px] rounded-full border px-1.5 py-0.5 text-[10px] tabular-nums"
+              style={{ borderColor: colorWithAlpha(accentHex, 0.45), color: accentHex }}
+            >
+              {localSongs.length}
+            </span>
+          </div>
+          <div className="mt-1 text-[15px] tracking-[0.3em] text-white/85">歌单切换</div>
         </div>
-      </aside>
+
+        <div className="sonic-playlist-strip relative mt-4 min-h-0 flex-1 overflow-y-auto pb-28 pr-5">
+          {localSongs.length > 0 ? localSongs.map((song) => {
+            const isActive = currentSongId === songIdentity(song);
+            return (
+              <button
+                key={songIdentity(song)}
+                onClick={() => loadNeteaseSong(song, localSongs)}
+                title={`${song.artist ? `${song.artist} - ` : ''}${song.name}`}
+                className="group flex w-full items-center justify-end gap-4 rounded-sm py-2 pl-6 text-right transition-colors hover:bg-white/[0.04]"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className={`truncate text-[16px] leading-6 transition-colors duration-300 ${isActive ? 'font-medium text-white' : 'text-white/35 group-hover:text-white/70'}`}>
+                    {song.name}
+                  </div>
+                  <div className={`mt-0.5 truncate text-[11px] transition-colors duration-300 ${isActive ? 'text-white/55' : 'text-white/25 group-hover:text-white/45'}`}>
+                    {song.artist || '未知艺术家'}
+                  </div>
+                </div>
+                {isActive && (
+                  <span className="flex h-5 w-4 shrink-0 items-end justify-end gap-[2px] pb-[3px]" aria-hidden="true">
+                    {[0, 1, 2, 3].map((bar) => (
+                      <span key={bar} className="sonic-eq-bar w-[2px] rounded-full" style={{ height: '100%', backgroundColor: accentHex }} />
+                    ))}
+                  </span>
+                )}
+                <div
+                  className={`relative h-[52px] w-[52px] shrink-0 overflow-hidden rounded-[4px] border transition-all duration-300 ${isActive ? '' : 'border-white/10 opacity-80 group-hover:opacity-100'}`}
+                  style={isActive ? { borderColor: colorWithAlpha(accentHex, 0.7), boxShadow: `0 0 16px ${colorWithAlpha(accentHex, 0.4)}` } : undefined}
+                >
+                  {song.cover ? (
+                    <img src={song.cover} alt="" className="h-full w-full object-cover" draggable={false} />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-white/[0.06] text-white/30">
+                      <ListMusic size={16} />
+                    </div>
+                  )}
+                </div>
+              </button>
+            );
+          }) : (
+            <div className="pr-6 text-right text-[12px] leading-6 text-white/35">
+              暂无歌曲
+              <div className="text-[10px] leading-5 text-white/25">将音频与同名 .lrc 放入 public/songs/ 并更新 manifest.json</div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Player Panel */}
