@@ -46,6 +46,11 @@ export default function App() {
   const availableRotationThemeIds = [...BUILT_IN_THEME_IDS, ...customThemes.map((preset) => preset.id)];
   const [themeRotation, setThemeRotation] = useState<ThemeRotationSettings>(() => readThemeRotationStorage(availableRotationThemeIds));
   const [lyricsSettings, setLyricsSettings] = useState<LyricsSettings>(readLyricsSettingsStorage);
+  // 网页布局下 spatial-wall 样式渲染在 3D 场景内部、几乎不可见；
+  // 统一回退到左侧 3D 滚动歌词（songyancai），保证歌词始终可见。
+  const effectiveLyricsSettings = lyricsSettings.style === 'spatial-wall'
+    ? { ...lyricsSettings, style: 'songyancai' as const }
+    : lyricsSettings;
   const [showDebugger, setShowDebugger] = useState(false);
   const [currentLyricsText, setCurrentLyricsText] = useState('');
   const [lyricsVisible, setLyricsVisible] = useState(true);
@@ -157,7 +162,7 @@ export default function App() {
         onCustomThemesChange={updateCustomThemes}
         onThemeRotationChange={updateThemeRotation}
         onGroundEqSettingsChange={updateGroundEqSettings}
-        lyricsSettings={lyricsSettings}
+            lyricsSettings={effectiveLyricsSettings}
         onLyricsSettingsChange={updateLyricsSettings}
         globalSceneSettings={globalSceneSettings}
         onGlobalSceneSettingsChange={updateGlobalSceneSettings}
@@ -177,7 +182,7 @@ export default function App() {
             rotationSpeed={sceneRotationSpeed} 
             coverUrl={coverVisible ? (currentSong?.cover || currentSong?.picUrl || '') : ''}
             lyricsText={currentLyricsText || null}
-            lyricsSettings={lyricsSettings}
+        lyricsSettings={effectiveLyricsSettings}
             lyricsVisible={lyricsVisible}
             isPerspectiveEditMode={isPerspectiveEditMode}
             resetCameraTrigger={resetCameraTrigger}

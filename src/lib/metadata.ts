@@ -45,3 +45,42 @@ export async function extractLyricsFromAudio(file: File): Promise<string | null>
   const metadata = await extractAudioMetadata(file, file.name);
   return metadata.lyrics;
 }
+
+export interface RemoteAudioTags {
+  title: string | null;
+  artist: string | null;
+  cover: string | null;
+}
+
+/**
+ * 通过 HTTP Range 请求只读取音频头部的 ID3 标签（不下载整首歌），
+ * 用于本地歌单列表展示标题 / 歌手 / 封面。
+ */
+export async function readAudioTagsFromUrl(url: string): Promise<RemoteAudioTags | null> {
+  try {
+    const mod: any = await import('jsmediatags/dist/jsmediatags.min.js');
+    const jsmediatags = mod.default ?? mod;
+    const tags: any = await new Promise((resolve, reject) => {
+      jsmediatags.read(url, {
+        onSuccess: (result: { tags: any }) => resolve(result.tags),
+        onError: (error: any) => reject(error),
+      });
+    });
+
+    const title = typeof tags?.title === 'string' && tags.title.trim() ? tags.title.trim() : null;
+    const artist = typeof tags?.artist === 'string' && tags.artist.trim() ? tags.artist.trim() : null;
+
+    let cover: string | null = null;
+    const picture = tags?.picture;
+    if (picture?.data?.length) {
+      const bytes = picture.data instanceof Uint8Array ? picture.data : new Uint8Array(picture.data);
+      cover = pictureToDataUrl({ data: bytes, format: picture.format });
+    }
+
+    if (!title && !artist && !cover) return null;
+    return { title, artist, cover };
+  } catch (error) {
+    console.warn('Unable to read audio tags from url:', error);
+    return null;
+  }
+}

@@ -26,7 +26,7 @@ import {
   type DisplaySettings,
 } from '../../lib/displaySettings';
 import { ClockDisplay } from './ClockDisplay';
-import { extractAudioMetadata } from '../../lib/metadata';
+import { extractAudioMetadata, readAudioTagsFromUrl } from '../../lib/metadata';
 import { readNeteaseCookieStorage, writeNeteaseCookieStorage } from '../../lib/neteaseCookie';
 import {
   getQQCookieLoginState,
@@ -438,8 +438,26 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
   useEffect(() => {
     let cancelled = false;
     fetchLocalSongsFromManifest(baseUrl)
-      .then((songs) => {
-        if (!cancelled) setLocalSongs(songs);
+      .then(async (songs) => {
+        if (cancelled) return;
+        setLocalSongs(songs);
+        // 逐首读取 ID3 标签补充歌手 / 标题 / 封面（Range 请求，不下载整首歌）
+        songs.forEach((song, index) => {
+          if (!song.url) return;
+          readAudioTagsFromUrl(song.url).then((tags) => {
+            if (cancelled || !tags) return;
+            setLocalSongs((current) => current.map((item, i) => (
+              i === index
+                ? {
+                    ...item,
+                    name: tags.title || item.name,
+                    artist: tags.artist || item.artist,
+                    cover: tags.cover || item.cover,
+                  }
+                : item
+            )));
+          });
+        });
       })
       .catch(() => {});
     return () => {
