@@ -2162,7 +2162,7 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
           </div>
 
           <div
-            className="player-panel absolute left-1/2 -translate-x-1/2 flex w-[900px] max-w-[90vw] items-center gap-6 rounded-2xl border border-white/10 px-6 py-3 pointer-events-auto backdrop-blur-[22px] transition-all duration-300 bottom-[20px] opacity-100"
+            className="player-panel absolute left-1/2 -translate-x-1/2 flex w-[900px] max-w-[90vw] items-center gap-6 rounded-2xl border border-white/10 px-6 py-3 pointer-events-auto backdrop-blur-[22px] transition-all duration-300 bottom-[20px] opacity-100 z-[100]"
           style={{
             background: 'rgba(10, 14, 18, 0.4)',
             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), 0 18px 50px rgba(0,0,0,0.3)',
@@ -2301,6 +2301,7 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
               onClick={() => { window.location.href = 'https://milox.dpdns.org'; }}
               className="hover:text-white transition-colors flex items-center gap-1"
               title="返回主页"
+              style={{ pointerEvents: 'auto', zIndex: 200 }}
             >
               <span className="text-sm" aria-hidden="true">🏠</span>
               <span className="text-[10px] hidden sm:inline tracking-wide">主页</span>
