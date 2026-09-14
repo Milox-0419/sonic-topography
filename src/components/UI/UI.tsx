@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Play, Pause, Volume2, SkipForward, SkipBack, Palette, Plus, ListMusic, Shuffle, Repeat, Repeat1, Trash2, Minus, Square, X, Search, Lock, Unlock, Menu, Settings, Pin, ChevronDown, ChevronUp, Mic } from 'lucide-react';
+import { Play, Pause, Volume2, SkipForward, SkipBack, Plus, ListMusic, Shuffle, Repeat, Repeat1, Trash2, Minus, Square, X, Search, Lock, Unlock, Menu, Settings, Pin, ChevronDown, ChevronUp, Mic } from 'lucide-react';
 import { engine } from '../../lib/AudioEngine';
 import { BUILT_IN_THEME_IDS, CUSTOM_THEME_ID, createCustomThemePreset, themes, type CustomThemeSettings, type ThemeColors, type ThemeRotationSettings } from '../../lib/themes';
 import {
@@ -2259,18 +2259,13 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
               style={{ color: displaySettings.showLyrics ? accentHex : undefined }}
             >
               {t('ui.text.101', lang)}</button>
-            <button 
-              onClick={() => {
-                const keys = Object.keys(themes);
-                const themeKeys = [...keys, CUSTOM_THEME_ID];
-                const currentIndex = themeKeys.indexOf(theme);
-                const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % themeKeys.length : 0;
-                onThemeChange(themeKeys[nextIndex]);
-              }}
-              className="hover:text-white transition-colors"
-              title={t('ui.text.102', lang)}
+            <button
+              onClick={() => { window.location.href = 'https://milox.dpdns.org'; }}
+              className="hover:text-white transition-colors flex items-center gap-1"
+              title="返回主页"
             >
-              <Palette size={16} />
+              <span className="text-sm" aria-hidden="true">🏠</span>
+              <span className="text-[10px] hidden sm:inline tracking-wide">主页</span>
             </button>
             <div className="flex min-w-0 items-center justify-end gap-1.5 group">
               <Volume2 
