@@ -2259,14 +2259,6 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
               style={{ color: displaySettings.showLyrics ? accentHex : undefined }}
             >
               {t('ui.text.101', lang)}</button>
-            <button
-              onClick={() => { window.location.href = 'https://milox.dpdns.org'; }}
-              className="hover:text-white transition-colors flex items-center gap-1"
-              title="返回主页"
-            >
-              <span className="text-sm" aria-hidden="true">🏠</span>
-              <span className="text-[10px] hidden sm:inline tracking-wide">主页</span>
-            </button>
             <div className="flex min-w-0 items-center justify-end gap-1.5 group">
               <Volume2 
                 size={16} 
