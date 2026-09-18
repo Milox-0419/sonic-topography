@@ -2249,6 +2249,14 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
                     ? <Shuffle size={14} />
                     : <Repeat1 size={14} />}
               </button>
+              <button
+                onClick={() => { window.location.href = 'https://milox.dpdns.org'; }}
+                className="hover:text-white transition-colors flex items-center gap-1"
+                title="返回主页"
+              >
+                <span className="text-sm" aria-hidden="true">🏠</span>
+                <span className="text-[10px] hidden sm:inline tracking-wide">主页</span>
+              </button>
           </div>
 
           <div className="flex shrink-0 items-center justify-end gap-4 text-white/40 ml-2">
@@ -2284,15 +2292,6 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
                 style={{ accentColor: accentHex }}
               />
             </div>
-            <button
-              onClick={() => { window.location.href = 'https://milox.dpdns.org'; }}
-              className="hover:text-white transition-colors flex items-center gap-1"
-              title="返回主页"
-              style={{ pointerEvents: 'auto', zIndex: 200 }}
-            >
-              <span className="text-sm" aria-hidden="true">🏠</span>
-              <span className="text-[10px] hidden sm:inline tracking-wide">主页</span>
-            </button>
           </div>
           </div>
         </div>
