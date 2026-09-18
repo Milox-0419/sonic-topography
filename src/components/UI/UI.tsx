@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Play, Pause, Volume2, SkipForward, SkipBack, Plus, ListMusic, Shuffle, Repeat, Repeat1, Trash2, Minus, Square, X, Search, Lock, Unlock, Menu, Settings, Pin, ChevronDown, ChevronUp, Mic } from 'lucide-react';
+import { Play, Pause, Volume2, SkipForward, SkipBack, Palette, Plus, ListMusic, Shuffle, Repeat, Repeat1, Trash2, Minus, Square, X, Search, Lock, Unlock, Menu, Settings, Pin, ChevronDown, ChevronUp, Mic } from 'lucide-react';
 import { engine } from '../../lib/AudioEngine';
 import { BUILT_IN_THEME_IDS, CUSTOM_THEME_ID, createCustomThemePreset, themes, type CustomThemeSettings, type ThemeColors, type ThemeRotationSettings } from '../../lib/themes';
 import {
@@ -2162,7 +2162,7 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
           </div>
 
           <div
-            className="player-panel absolute left-1/2 -translate-x-1/2 flex w-[900px] max-w-[90vw] items-center gap-6 rounded-2xl border border-white/10 px-6 py-3 pointer-events-auto backdrop-blur-[22px] transition-all duration-300 bottom-[20px] opacity-100 z-[100]"
+            className="player-panel absolute left-1/2 -translate-x-1/2 flex w-[900px] max-w-[90vw] items-center gap-6 rounded-2xl border border-white/10 px-6 py-3 pointer-events-auto backdrop-blur-[22px] transition-all duration-300 bottom-[20px] opacity-100"
           style={{
             background: 'rgba(10, 14, 18, 0.4)',
             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), 0 18px 50px rgba(0,0,0,0.3)',
@@ -2249,14 +2249,6 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
                     ? <Shuffle size={14} />
                     : <Repeat1 size={14} />}
               </button>
-              <button
-                onClick={() => { window.location.href = 'https://milox.dpdns.org'; }}
-                className="hover:text-white transition-colors flex items-center gap-1"
-                title="返回主页"
-              >
-                <span className="text-sm" aria-hidden="true">🏠</span>
-                <span className="text-[10px] hidden sm:inline tracking-wide">主页</span>
-              </button>
           </div>
 
           <div className="flex shrink-0 items-center justify-end gap-4 text-white/40 ml-2">
@@ -2267,6 +2259,19 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
               style={{ color: displaySettings.showLyrics ? accentHex : undefined }}
             >
               {t('ui.text.101', lang)}</button>
+            <button 
+              onClick={() => {
+                const keys = Object.keys(themes);
+                const themeKeys = [...keys, CUSTOM_THEME_ID];
+                const currentIndex = themeKeys.indexOf(theme);
+                const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % themeKeys.length : 0;
+                onThemeChange(themeKeys[nextIndex]);
+              }}
+              className="hover:text-white transition-colors"
+              title={t('ui.text.102', lang)}
+            >
+              <Palette size={16} />
+            </button>
             <div className="flex min-w-0 items-center justify-end gap-1.5 group">
               <Volume2 
                 size={16} 
@@ -2292,6 +2297,14 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
                 style={{ accentColor: accentHex }}
               />
             </div>
+            <button
+              onClick={() => { window.location.href = 'https://milox.dpdns.org'; }}
+              className="hover:text-white transition-colors flex items-center gap-1"
+              title="返回主页"
+            >
+              <span className="text-sm" aria-hidden="true">🏠</span>
+              <span className="text-[10px] hidden sm:inline tracking-wide">主页</span>
+            </button>
           </div>
           </div>
         </div>
