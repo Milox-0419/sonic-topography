@@ -55,8 +55,6 @@ type MapShaderMaterialInstance = THREE.ShaderMaterial & {
   uWarmEdge: THREE.Color;
   uRippleColor: THREE.Color;
   uGlowIntensity: number;
-  uSoftColor: THREE.Color;
-  uBeatPulse: number;
 };
 
 type CoverShaderMaterialInstance = THREE.ShaderMaterial & {
@@ -444,7 +442,6 @@ export function MapScene({
     mat.uMid = eqMid;
     mat.uTreble = data.treble;
     mat.uEnergy = eqEnergy;
-    mat.uBeatPulse = Math.max(0, Math.min(1, data.kickEnvelope));
     mat.uAmplitude = amplitudeMultiplier;
     
     mat.uSubBass = eqSubBass;
