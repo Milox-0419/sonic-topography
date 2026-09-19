@@ -48,7 +48,7 @@ export const BUILT_IN_THEME_IDS = [
   'wine-signal',
   'daybreak-lime',
 ];
-export const DEFAULT_THEME_ID = 'koi-pond';
+export const DEFAULT_THEME_ID = 'nocturnal';
 export const CUSTOM_THEME_STORAGE_KEY = 'sonic-topography-custom-themes-v2';
 export const LEGACY_CUSTOM_THEME_STORAGE_KEY = 'sonic-topography-custom-theme-v1';
 export const ACTIVE_CUSTOM_THEME_STORAGE_KEY = 'sonic-topography-active-custom-theme-v1';
