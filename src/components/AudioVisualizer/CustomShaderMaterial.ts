@@ -293,12 +293,12 @@ export const MapShaderMaterial = shaderMaterial(
 
       // Sub-Bass: Center heavy, ultra slow rolling hills, massive block lifts
       float subRegion = smoothstep(25.0, 0.0, centerDist);
-      float subLift = uSubBass * subRegion * 5.0; // Reduced from 8.0
+      float subLift = uSubBass * subRegion * 8.0;
 
       // Bass: Chunk-based lifts, less rigid than sub, but still clustered
       float bassNoise = snoise(pos2D * 0.1 - vec2(0.0, uTime * 0.2));
       float bassRegion = smoothstep(35.0, 5.0, centerDist + bassNoise * 5.0);
-      float bassLift = uBass * bassRegion * (smoothstep(0.0, 1.0, rnd + uDensity * 0.5)) * 4.0; // Reduced from 6.0
+      float bassLift = uBass * bassRegion * (smoothstep(0.0, 1.0, rnd + uDensity * 0.5)) * 6.0;
 
       // Low Mid: Flowing waves across the whole map slowly
       float lowMidNoise = snoise(pos2D * 0.05 + vec2(uTime * 0.1, 0.0));
