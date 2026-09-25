@@ -23,9 +23,6 @@ const terrainFragmentShader = `
     uniform vec3 uWarmEdge;
     uniform vec3 uRippleColor;
     uniform float uGlowIntensity;
-    uniform float uEnergy;
-    uniform float uBeatPulse;
-    uniform vec3 uSoftColor;
 
     varying vec2 vUv;
     varying float vElevation;
@@ -136,22 +133,6 @@ const terrainFragmentShader = `
          finalColor += currentGlow * rimGlow;
       }
 
-      // Energy-driven pillar palette:
-      // Quiet intros keep the pillars soft, dim and calm.
-      // Vocals/beats shift them to blue, and each kick flashes a quick bright blue pulse.
-      float blueLevel = smoothstep(0.10, 0.28, uEnergy);
-      float beatFlash = uBeatPulse;
-
-      vec3 softColor = uSoftColor;
-      vec3 blueColor = mix(uCoolCore, vec3(0.15, 0.45, 1.0), 0.55);
-      vec3 flashColor = mix(blueColor, vec3(1.0), 0.3);
-
-      vec3 reactiveColor = mix(softColor, blueColor, blueLevel);
-      reactiveColor = mix(reactiveColor, flashColor, clamp(beatFlash, 0.0, 1.0));
-
-      float reactiveAmount = (0.30 + 0.50 * blueLevel) * (0.4 + 0.6 * normElevation) + beatFlash * 0.35;
-      finalColor = mix(finalColor, reactiveColor, clamp(reactiveAmount, 0.0, 1.0));
-      
       finalColor += uRippleColor * vRippleAnim.x * 0.6;
       finalColor += vec3(1.0, 1.0, 1.0) * vRippleAnim.y * 1.2;
       
@@ -205,8 +186,6 @@ export const MapShaderMaterial = shaderMaterial(
     uWarmEdge: new THREE.Color(1.0, 0.6, 0.0),
     uRippleColor: new THREE.Color(0.2, 0.9, 1.0),
     uGlowIntensity: 1.0,
-    uBeatPulse: 0,
-    uSoftColor: new THREE.Color(0.78, 0.83, 0.90),
   },
   // vertex shader
   `
