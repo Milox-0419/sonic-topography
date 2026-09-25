@@ -272,26 +272,26 @@ export const MapShaderMaterial = shaderMaterial(
 
       // Sub-Bass: Center heavy, ultra slow rolling hills, massive block lifts
       float subRegion = smoothstep(25.0, 0.0, centerDist);
-      float subLift = uSubBass * subRegion * 8.0;
+      float subLift = uSubBass * subRegion * 12.0;
 
       // Bass: Chunk-based lifts, less rigid than sub, but still clustered
       float bassNoise = snoise(pos2D * 0.1 - vec2(0.0, uTime * 0.2));
       float bassRegion = smoothstep(35.0, 5.0, centerDist + bassNoise * 5.0);
-      float bassLift = uBass * bassRegion * (smoothstep(0.0, 1.0, rnd + uDensity * 0.5)) * 6.0;
+      float bassLift = uBass * bassRegion * (smoothstep(0.0, 1.0, rnd + uDensity * 0.5)) * 9.0;
 
       // Low Mid: Flowing waves across the whole map slowly
       float lowMidNoise = snoise(pos2D * 0.05 + vec2(uTime * 0.1, 0.0));
-      float lowMidLift = uLowMid * (lowMidNoise * 0.5 + 0.5) * 4.0;
+      float lowMidLift = uLowMid * (lowMidNoise * 0.5 + 0.5) * 6.0;
 
       // Mid: River-like current. Strong diagonal flow.
       float riverFlow = sin(pos2D.x * 0.2 + pos2D.y * 0.2 + snoise(pos2D * 0.1) * 2.0 - uTime * 2.0);
-      float midLift = uMid * max(0.0, riverFlow) * 5.0;
+      float midLift = uMid * max(0.0, riverFlow) * 7.5;
 
       // High Mid: Individual scattered spikes, highly dependent on column random
       float highMidRegion = smoothstep(10.0, 45.0, centerDist);
       float highMidLift = 0.0;
       if (fract(rnd * 13.3) > 0.8) {
-          highMidLift = uHighMid * highMidRegion * fract(rnd * 7.7) * 4.0;
+          highMidLift = uHighMid * highMidRegion * fract(rnd * 7.7) * 6.0;
       }
 
       // Combine
@@ -310,7 +310,7 @@ export const MapShaderMaterial = shaderMaterial(
       
       // Climax boost: the higher the energy, the higher the pillars jump.
       // Scales smoothly with uEnergy (no abrupt on/off), helps climaxes stand out.
-      audioElevation *= 1.0 + uEnergy * 2.0;
+      audioElevation *= 1.0 + uEnergy * 1.5;
       
       // Apply overall amplitude scaling
       audioElevation *= uAmplitude;
@@ -331,13 +331,13 @@ export const MapShaderMaterial = shaderMaterial(
            
            float curSpeed = speed;
            float curWidth = width;
-           float curFadeDist = 8.0;
+           float curFadeDist = 4.8;
            float elevationScale = 4.0;
            
            if (uRipples[i].rippleType > 0.5) {
                curSpeed = 20.0;
                curWidth = 1.0; // Sharper
-               curFadeDist = 4.0; // Fades out faster
+               curFadeDist = 2.4; // Fades out faster
                elevationScale = 1.0; // Less elevation impact
            }
            

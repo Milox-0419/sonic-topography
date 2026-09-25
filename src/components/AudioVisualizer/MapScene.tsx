@@ -219,25 +219,28 @@ export function MapScene({
   }, [gridSize, spacing]);
 
   // Ripples logic
-  // We keep a ring buffer of 10 ripples
+  // We keep a fixed pool of 10 ripples
+  const RIPPLE_EXPIRY_SECONDS = 2.5;
   const ripplesRef = useRef(new Array(10).fill(null).map(() => ({
     pos: new THREE.Vector2(),
     time: -100,
     strength: 0,
-    isActive: 0
+    isActive: 0,
+    rippleType: 0
   })));
-  const rippleIndex = useRef(0);
 
   const addRipple = (x: number, y: number, strength: number, isWhite: boolean = false) => {
-    const idx = rippleIndex.current;
-    ripplesRef.current[idx] = {
-      pos: new THREE.Vector2(x, y),
-      time: clock.getElapsedTime(),
-      strength,
-      isActive: 1,
-      rippleType: isWhite ? 1 : 0
-    } as any;
-    rippleIndex.current = (idx + 1) % 10;
+    const now = clock.getElapsedTime();
+    const ripple = ripplesRef.current.find((slot) =>
+      slot.isActive === 0 || now - slot.time >= RIPPLE_EXPIRY_SECONDS
+    );
+    if (!ripple) return;
+
+    ripple.pos.set(x, y);
+    ripple.time = now;
+    ripple.strength = strength;
+    ripple.isActive = 1;
+    ripple.rippleType = isWhite ? 1 : 0;
   };
 
   const fogRef = useRef<THREE.Fog>(null);
