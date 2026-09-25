@@ -377,13 +377,20 @@ canvas {
 }
 
 .volume-slider {
+  --volume-level: 0%;
   appearance: none;
   -webkit-appearance: none;
   background: transparent;
 }
 
 .volume-slider::-webkit-slider-runnable-track {
-  background: linear-gradient(to right, #1e6fd9, #00e5a0);
+  background: linear-gradient(
+    to right,
+    #1e6fd9 0%,
+    #00e5a0 var(--volume-level),
+    rgba(255, 255, 255, 0.28) var(--volume-level),
+    rgba(255, 255, 255, 0.28) 100%
+  );
   border-radius: 9999px;
   height: 4px;
 }
@@ -399,7 +406,13 @@ canvas {
 }
 
 .volume-slider::-moz-range-track {
-  background: linear-gradient(to right, #1e6fd9, #00e5a0);
+  background: linear-gradient(
+    to right,
+    #1e6fd9 0%,
+    #00e5a0 var(--volume-level),
+    rgba(255, 255, 255, 0.28) var(--volume-level),
+    rgba(255, 255, 255, 0.28) 100%
+  );
   border-radius: 9999px;
   height: 4px;
 }

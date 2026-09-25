@@ -2164,8 +2164,11 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
           <div
             className="player-panel absolute left-1/2 -translate-x-1/2 flex w-[900px] max-w-[90vw] items-center gap-6 rounded-2xl border border-white/10 px-6 py-3 pointer-events-auto backdrop-blur-[22px] transition-all duration-300 bottom-[20px] opacity-100 z-[100]"
           style={{
-            background: 'rgba(10, 14, 18, 0.4)',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), 0 18px 50px rgba(0,0,0,0.3)',
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
           }}
         >
           <div className="flex shrink-0 items-center justify-center">
@@ -2289,7 +2292,10 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
                   window.localStorage.setItem('sonic-volume', val.toString());
                 }}
                 className="volume-slider h-4 w-20 shrink-0 cursor-pointer"
-                style={{ accentColor: accentHex }}
+                style={{
+                  '--volume-level': `${Math.max(0, Math.min(1, volume)) * 100}%`,
+                  accentColor: accentHex,
+                } as React.CSSProperties}
               />
             </div>
           </div>
