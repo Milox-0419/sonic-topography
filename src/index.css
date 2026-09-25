@@ -391,13 +391,11 @@ canvas {
 .volume-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  background: #ffffff;
+  background: transparent;
   border: 0;
-  border-radius: 50%;
-  cursor: pointer;
-  height: 12px;
-  margin-top: -4px;
-  width: 12px;
+  height: 0;
+  margin: 0;
+  width: 0;
 }
 
 .volume-slider::-moz-range-track {
@@ -407,10 +405,8 @@ canvas {
 }
 
 .volume-slider::-moz-range-thumb {
-  background: #ffffff;
+  background: transparent;
   border: 0;
-  border-radius: 50%;
-  cursor: pointer;
-  height: 12px;
-  width: 12px;
+  height: 0;
+  width: 0;
 }
