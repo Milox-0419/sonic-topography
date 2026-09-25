@@ -2288,7 +2288,7 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
                   setVolume(val);
                   window.localStorage.setItem('sonic-volume', val.toString());
                 }}
-                className="w-12 h-1 accent-current opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer aspect-auto bg-white/20 appearance-none rounded-full"
+                className="volume-slider h-4 w-20 shrink-0 cursor-pointer"
                 style={{ accentColor: accentHex }}
               />
             </div>
