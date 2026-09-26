@@ -2291,7 +2291,7 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
                   setVolume(val);
                   window.localStorage.setItem('sonic-volume', val.toString());
                 }}
-                className="volume-slider h-4 w-20 shrink-0 cursor-pointer"
+                className="volume-slider relative z-20 h-4 w-14 shrink-0 cursor-pointer"
                 style={{
                   '--volume-level': `${Math.max(0, Math.min(1, volume)) * 100}%`,
                   accentColor: accentHex,
