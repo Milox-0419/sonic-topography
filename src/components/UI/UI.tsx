@@ -1711,51 +1711,71 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
           <div className="mt-1 text-[15px] tracking-[0.3em] text-white/85">歌单切换</div>
         </div>
 
-        <div className="sonic-playlist-strip relative mt-4 min-h-0 flex-1 overflow-y-auto pb-28 pr-5">
-          {localSongs.length > 0 ? localSongs.map((song) => {
-            const isActive = currentSongId === songIdentity(song);
-            return (
-              <button
-                key={songIdentity(song)}
-                onClick={() => loadNeteaseSong(song, localSongs)}
-                title={`${song.artist ? `${song.artist} - ` : ''}${song.name}`}
-                className="group flex w-full items-center justify-end gap-4 rounded-sm py-2 pl-6 text-right transition-colors hover:bg-white/[0.04]"
-              >
-                <div className="min-w-0 flex-1">
-                  <div className={`truncate text-[16px] leading-6 transition-colors duration-300 ${isActive ? 'font-medium text-white' : 'text-white/35 group-hover:text-white/70'}`}>
-                    {song.name}
-                  </div>
-                  <div className={`mt-0.5 truncate text-[11px] transition-colors duration-300 ${isActive ? 'text-white/55' : 'text-white/25 group-hover:text-white/45'}`}>
-                    {song.artist || '未知艺术家'}
-                  </div>
-                </div>
-                {isActive && (
-                  <span className="flex h-5 w-4 shrink-0 items-end justify-end gap-[2px] pb-[3px]" aria-hidden="true">
-                    {[0, 1, 2, 3].map((bar) => (
-                      <span key={bar} className="sonic-eq-bar w-[2px] rounded-full" style={{ height: '100%', backgroundColor: accentHex }} />
-                    ))}
-                  </span>
-                )}
+        <div
+          className="sonic-playlist-strip pointer-events-auto relative mt-4 min-h-0 flex-1 overflow-y-auto pb-36 pr-5"
+          style={{ perspective: '1200px', perspectiveOrigin: 'right center' }}
+        >
+          <div
+            className="flex flex-col gap-1"
+            style={{
+              transform: 'rotateY(-12deg) rotateX(3deg) translateZ(-30px)',
+              transformOrigin: 'right center',
+              transformStyle: 'preserve-3d',
+            }}
+          >
+            {localSongs.length > 0 ? localSongs.map((song) => {
+              const isActive = currentSongId === songIdentity(song);
+              return (
                 <div
-                  className={`relative h-[52px] w-[52px] shrink-0 overflow-hidden rounded-[4px] border transition-all duration-300 ${isActive ? '' : 'border-white/10 opacity-80 group-hover:opacity-100'}`}
-                  style={isActive ? { borderColor: colorWithAlpha(accentHex, 0.7), boxShadow: `0 0 16px ${colorWithAlpha(accentHex, 0.4)}` } : undefined}
+                  key={songIdentity(song)}
+                  style={{
+                    transform: `translateZ(${isActive ? 14 : 0}px)`,
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 300ms ease',
+                  }}
                 >
-                  {song.cover ? (
-                    <img src={song.cover} alt="" className="h-full w-full object-cover" draggable={false} />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-white/[0.06] text-white/30">
-                      <ListMusic size={16} />
+                  <button
+                    onClick={() => loadNeteaseSong(song, localSongs)}
+                    title={`${song.artist ? `${song.artist} - ` : ''}${song.name}`}
+                    className="group flex w-full items-center justify-end gap-4 rounded-sm py-2 pl-6 text-right transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 hover:bg-white/[0.04]"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className={`truncate text-[16px] leading-6 transition-colors duration-300 ${isActive ? 'font-medium text-white' : 'text-white/35 group-hover:text-white/70'}`}>
+                        {song.name}
+                      </div>
+                      <div className={`mt-0.5 truncate text-[11px] transition-colors duration-300 ${isActive ? 'text-white/55' : 'text-white/25 group-hover:text-white/45'}`}>
+                        {song.artist || '未知艺术家'}
+                      </div>
                     </div>
-                  )}
+                    {isActive && (
+                      <span className="flex h-5 w-4 shrink-0 items-end justify-end gap-[2px] pb-[3px]" aria-hidden="true">
+                        {[0, 1, 2, 3].map((bar) => (
+                          <span key={bar} className="sonic-eq-bar w-[2px] rounded-full" style={{ height: '100%', backgroundColor: accentHex }} />
+                        ))}
+                      </span>
+                    )}
+                    <div
+                      className={`relative h-[52px] w-[52px] shrink-0 overflow-hidden rounded-[4px] border transition-all duration-300 ${isActive ? '' : 'border-white/10 opacity-80 group-hover:opacity-100'}`}
+                      style={isActive ? { borderColor: colorWithAlpha(accentHex, 0.7), boxShadow: `0 0 16px ${colorWithAlpha(accentHex, 0.4)}` } : undefined}
+                    >
+                      {song.cover ? (
+                        <img src={song.cover} alt="" className="h-full w-full object-cover" draggable={false} />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-white/[0.06] text-white/30">
+                          <ListMusic size={16} />
+                        </div>
+                      )}
+                    </div>
+                  </button>
                 </div>
-              </button>
-            );
-          }) : (
-            <div className="pr-6 text-right text-[12px] leading-6 text-white/35">
-              暂无歌曲
-              <div className="text-[10px] leading-5 text-white/25">将音频与同名 .lrc 放入 public/songs/ 并更新 manifest.json</div>
-            </div>
-          )}
+              );
+            }) : (
+              <div className="pr-6 text-right text-[12px] leading-6 text-white/35">
+                暂无歌曲
+                <div className="text-[10px] leading-5 text-white/25">将音频与同名 .lrc 放入 public/songs/ 并更新 manifest.json</div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
