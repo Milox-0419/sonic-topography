@@ -1739,12 +1739,21 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
                     title={`${song.artist ? `${song.artist} - ` : ''}${song.name}`}
                     className="group flex w-full items-center justify-end gap-4 rounded-sm py-2 pl-6 text-right transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 hover:bg-white/[0.04]"
                   >
-                    <div className="min-w-0 flex-1">
-                      <div className={`truncate text-[16px] leading-6 transition-colors duration-300 ${isActive ? 'font-medium text-white' : 'text-white/35 group-hover:text-white/70'}`}>
-                        {song.name}
-                      </div>
-                      <div className={`mt-0.5 truncate text-[11px] transition-colors duration-300 ${isActive ? 'text-white/55' : 'text-white/25 group-hover:text-white/45'}`}>
-                        {song.artist || '未知艺术家'}
+                    <div className="flex min-w-0 flex-1 items-center gap-2">
+                      <span
+                        aria-hidden="true"
+                        className="h-2.5 w-2.5 shrink-0 rounded-full border transition-all duration-300"
+                        style={isActive
+                          ? { backgroundColor: accentHex, borderColor: accentHex, boxShadow: `0 0 8px ${colorWithAlpha(accentHex, 0.65)}` }
+                          : { backgroundColor: 'transparent', borderColor: 'rgba(255, 255, 255, 0.3)' }}
+                      />
+                      <div className="min-w-0 flex-1 text-right">
+                        <div className={`truncate text-[16px] leading-6 transition-colors duration-300 ${isActive ? 'font-medium text-white' : 'text-white/35 group-hover:text-white/70'}`}>
+                          {song.name}
+                        </div>
+                        <div className={`mt-0.5 truncate text-[11px] transition-colors duration-300 ${isActive ? 'text-white/55' : 'text-white/25 group-hover:text-white/45'}`}>
+                          {song.artist || '未知艺术家'}
+                        </div>
                       </div>
                     </div>
                     {isActive && (
