@@ -1515,6 +1515,7 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
   };
 
   const activePlaylist = playlists.find((playlist) => playlist.id === activePlaylistId) || playlists[0];
+  const activeLocalSongIndex = localSongs.findIndex((song) => songIdentity(song) === currentSongId);
 
   const latestRefs = useRef({ displaySettings, playFromQueue });
   useEffect(() => {
@@ -1688,7 +1689,7 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
       )}
 
       {/* Sidebar Right: cover-art playlist strip (always visible) */}
-      <div className="absolute right-0 top-0 z-[60] flex h-full w-[380px] flex-col pointer-events-auto">
+      <div className="absolute right-0 top-0 bottom-[140px] z-[60] flex w-[380px] flex-col pointer-events-auto">
         <div
           className="pointer-events-none absolute inset-0"
           style={{ background: 'linear-gradient(to left, rgba(3, 6, 12, 0.78) 55%, rgba(3, 6, 12, 0.35) 78%, transparent)' }}
@@ -1712,26 +1713,32 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
         </div>
 
         <div
-          className="sonic-playlist-strip pointer-events-auto relative mt-4 min-h-0 flex-1 overflow-y-auto pb-36 pr-5"
+          className="sonic-playlist-strip pointer-events-auto relative mt-4 min-h-0 max-h-full flex-1 overflow-y-auto pb-8 pr-5"
           style={{ perspective: '1200px', perspectiveOrigin: 'right center' }}
         >
           <div
-            className="flex flex-col gap-1"
+            className="flex flex-col gap-1.5"
             style={{
               transform: 'rotateY(-12deg) rotateX(3deg) translateZ(-30px)',
               transformOrigin: 'right center',
               transformStyle: 'preserve-3d',
             }}
           >
-            {localSongs.length > 0 ? localSongs.map((song) => {
+            {localSongs.length > 0 ? localSongs.map((song, index) => {
               const isActive = currentSongId === songIdentity(song);
+              const distance = activeLocalSongIndex >= 0 ? Math.abs(index - activeLocalSongIndex) : 0;
+              const depth = activeLocalSongIndex >= 0 ? Math.max(-24, 12 - distance * 6) : 0;
+              const opacity = activeLocalSongIndex >= 0 ? Math.max(0.3, 0.95 - distance * 0.12) : 0.72;
+              const scale = activeLocalSongIndex >= 0 ? Math.max(0.94, 1.02 - distance * 0.025) : 1;
               return (
                 <div
                   key={songIdentity(song)}
                   style={{
-                    transform: `translateZ(${isActive ? 14 : 0}px)`,
+                    opacity,
+                    transform: `translate3d(0, 0, ${depth}px) scale(${scale})`,
                     transformStyle: 'preserve-3d',
-                    transition: 'transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1)',
+                    transition: 'transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 500ms ease',
+                    willChange: 'transform, opacity',
                   }}
                 >
                   <button
