@@ -1731,13 +1731,13 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
                   style={{
                     transform: `translateZ(${isActive ? 14 : 0}px)`,
                     transformStyle: 'preserve-3d',
-                    transition: 'transform 300ms ease',
+                    transition: 'transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1)',
                   }}
                 >
                   <button
                     onClick={() => loadNeteaseSong(song, localSongs)}
                     title={`${song.artist ? `${song.artist} - ` : ''}${song.name}`}
-                    className="group flex w-full items-center justify-end gap-4 rounded-sm py-2 pl-6 text-right transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 hover:bg-white/[0.04]"
+                    className="group flex w-full items-center justify-end gap-4 rounded-sm py-3 pl-6 text-right transition-all duration-500 ease-out hover:scale-[1.02] hover:-translate-y-0.5 hover:bg-white/[0.04]"
                   >
                     <div className="flex min-w-0 flex-1 items-center gap-2">
                       <span
@@ -1748,10 +1748,20 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
                           : { backgroundColor: 'transparent', borderColor: 'rgba(255, 255, 255, 0.3)' }}
                       />
                       <div className="min-w-0 flex-1 text-right">
-                        <div className={`truncate text-[16px] leading-6 transition-colors duration-300 ${isActive ? 'font-medium text-white' : 'text-white/35 group-hover:text-white/70'}`}>
+                        <div
+                          className={`truncate transition-all duration-500 ease-out ${isActive ? 'text-[18px] font-medium leading-7 text-white' : 'text-[15px] font-normal leading-6 text-white/40 group-hover:text-white/70'}`}
+                          style={isActive
+                            ? { textShadow: `0 0 18px ${colorWithAlpha(accentHex, 0.5)}, 0 2px 4px rgba(0,0,0,0.8)` }
+                            : { textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}
+                        >
                           {song.name}
                         </div>
-                        <div className={`mt-0.5 truncate text-[11px] transition-colors duration-300 ${isActive ? 'text-white/55' : 'text-white/25 group-hover:text-white/45'}`}>
+                        <div
+                          className={`mt-1 truncate leading-4 transition-all duration-500 ease-out ${isActive ? 'text-[11px] text-white/60' : 'text-[10px] text-white/30 group-hover:text-white/50'}`}
+                          style={isActive
+                            ? { textShadow: `0 0 10px ${colorWithAlpha(accentHex, 0.28)}` }
+                            : { textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}
+                        >
                           {song.artist || '未知艺术家'}
                         </div>
                       </div>
