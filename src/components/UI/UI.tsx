@@ -2219,7 +2219,7 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
           </div>
 
           <div
-            className="player-panel absolute left-1/2 -translate-x-1/2 flex w-[900px] max-w-[90vw] items-center gap-6 rounded-2xl border border-white/10 px-6 py-3 pointer-events-auto backdrop-blur-[22px] transition-all duration-300 bottom-[20px] opacity-100 z-[100]"
+            className="player-panel absolute left-1/2 -translate-x-1/2 flex w-[900px] max-w-[90vw] items-center gap-6 rounded-full border border-white/10 px-8 py-3 pointer-events-auto backdrop-blur-[22px] transition-all duration-300 bottom-[20px] opacity-100 z-[100]"
           style={{
             background: 'rgba(255, 255, 255, 0.1)',
             backdropFilter: 'blur(12px)',
