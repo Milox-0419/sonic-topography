@@ -1714,7 +1714,12 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
 
         <div
           className="sonic-playlist-strip pointer-events-auto relative mt-4 min-h-0 max-h-full flex-1 overflow-y-auto pb-8 pr-5"
-          style={{ perspective: '1200px', perspectiveOrigin: 'right center' }}
+          style={{
+            perspective: '1200px',
+            perspectiveOrigin: 'right center',
+            maskImage: 'linear-gradient(to bottom, black 0%, black calc(100% - 56px), transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black calc(100% - 56px), transparent 100%)',
+          }}
         >
           <div
             className="flex flex-col gap-1.5"
