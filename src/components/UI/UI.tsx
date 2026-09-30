@@ -1692,11 +1692,17 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
       <div className="absolute right-0 top-0 bottom-[140px] z-[60] flex w-[380px] flex-col pointer-events-auto">
         <div
           className="pointer-events-none absolute inset-0"
-          style={{ background: 'linear-gradient(to left, rgba(3, 6, 12, 0.78) 55%, rgba(3, 6, 12, 0.35) 78%, transparent)' }}
+          style={{
+            background: 'linear-gradient(to left, rgba(3, 6, 12, 0.78) 55%, rgba(3, 6, 12, 0.35) 78%, transparent)',
+            bottom: -96,
+          }}
         />
         <div
           className="pointer-events-none absolute right-0 top-0 h-full w-px"
-          style={{ background: `linear-gradient(to bottom, transparent, ${colorWithAlpha(accentHex, 0.5)} 28%, ${colorWithAlpha(accentHex, 0.5)} 72%, transparent)` }}
+          style={{
+            background: `linear-gradient(to bottom, transparent, ${colorWithAlpha(accentHex, 0.5)} 28%, ${colorWithAlpha(accentHex, 0.5)} 72%, transparent)`,
+            height: 'calc(100% + 96px)',
+          }}
         />
 
         <div className="relative shrink-0 pt-6 pr-6 text-right">
@@ -1717,8 +1723,8 @@ export function UI({ theme, resolvedTheme, customThemes, activeCustomThemeId, th
           style={{
             perspective: '1200px',
             perspectiveOrigin: 'right center',
-            maskImage: 'linear-gradient(to bottom, black 0%, black calc(100% - 56px), transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black calc(100% - 56px), transparent 100%)',
+            maskImage: 'linear-gradient(to bottom, black 0%, black calc(100% - 104px), rgba(0, 0, 0, 0.92) calc(100% - 82px), rgba(0, 0, 0, 0.72) calc(100% - 60px), rgba(0, 0, 0, 0.42) calc(100% - 36px), rgba(0, 0, 0, 0.16) calc(100% - 14px), transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black calc(100% - 104px), rgba(0, 0, 0, 0.92) calc(100% - 82px), rgba(0, 0, 0, 0.72) calc(100% - 60px), rgba(0, 0, 0, 0.42) calc(100% - 36px), rgba(0, 0, 0, 0.16) calc(100% - 14px), transparent 100%)',
           }}
         >
           <div
